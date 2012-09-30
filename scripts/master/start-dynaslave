@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -x
+
+BUILDS_HOME=/apps/jenkins
+BUILDS_URL=http://jenkins.hostname.com
+# Change the HOST prefix from ds- if you set it to something different in the Jenkins system config.
+HOST=ds-$(hostname)
+SLAVE_DIR=${BUILDS_HOME}/slave
+SLAVE_TOOLS=${BUILDS_HOME}/tools
+SLAVE_JAR=${BUILDS_URL}/jnlpJars/slave.jar
+JNLP_URL="${BUILDS_URL}/computer/${HOST}/slave-agent.jnlp"
+
+setup_java() { 
+    JAVA_HOME=${SLAVE_TOOLS}/jdk1.6.0_31
+    export JAVA_HOME
+    echo "Using ${JAVA_HOME} as JAVA_HOME"
+
+    PATH=${JAVA_HOME}/bin:${PATH}
+    java -version
+}
+
+refresh_slave_jar() {
+    pushd ${SLAVE_TOOLS}
+    curl -O ${SLAVE_JAR}
+    popd
+}
+
+launch_slave() {
+    pkill -f slave.jar
+    rotate_logs
+    ${JAVA_HOME}/bin/java -jar ${SLAVE_TOOLS}/slave.jar \
+      -jnlpUrl ${JNLP_URL} > ${LOG} 2>&1 &
+    echo Slave started as process $$
+}
+
+main() {
+    [[ -d ${BUILDS_HOME}/slave ]] && mkdir -p ${BUILDS_HOME}/slave
+    setup_java
+    launch_slave
+}
+
+main

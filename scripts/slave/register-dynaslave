@@ -1,0 +1,27 @@
+#!/bin/bash
+
+Log() {
+    /usr/bin/logger -t "$prog[$$]"  -p user.notice "$*"
+}
+
+buildhost="http://jenkins.hostname.com"
+create_slave="${buildhost}/plugin/dynaslave/createSlave?executors=4&remoteFsRoot=/apps/jenkins/slave"
+labels="labels=StandardSlave"
+# Change the hostname prefix from ds- if you set it to something different in the Jenkins system config.
+hostname=ds-$(hostname)
+
+curl -f --silent ${buildhost}/computer/${hostname}
+ret=$?
+if [ ${ret} -ne 0 ]
+then
+    Log "Jenkins registration lost, re-registering"
+    curl -f --silent "${create_slave}&name=${hostname#dynaslave-}&hostname=${address}&${labels}"
+    curl -f --silent ${buildhost}/computer/${hostname}
+    ret=$?
+    if [ ${ret} -eq 0 ]
+    then
+        Log "Registration with Jenkins successful"
+    else
+        Log "Registration with jenkins FAILED"
+    fi
+fi

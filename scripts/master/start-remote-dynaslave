@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -x
+
+if [ $# -ne 2 ]
+then
+    echo "Usage: $0 <host> <user>"
+    echo "The following was specified:"
+    cat /proc/$$/cmdline
+    exit 65
+fi
+slave_node=$1
+remote_user=$2
+
+master_node="jenkins.hostname.com"
+keyfile="/home/jenkins/.ssh/id_rsa"
+
+remote_builds_dir=/apps/jenkins
+
+# TODO this isn't really needed since start-remote-dynaslave does a pkill as well
+echo "killing old slave processes"
+ssh -l ${remote_user} -i ${keyfile} ${slave_node} "pgrep -fl slave.jar; pkill -f slave.jar"
+
+if [ ${slave_node} != ${master_node} ]
+then
+    echo "updating tools"
+    ssh -l ${remote_user} -i ${keyfile} ${slave_node} "chmod 755 \$HOME"
+    rsync -au -c -v --delete \
+        -e "ssh -l ${remote_user} -i ${keyfile}" \
+        /apps/jenkins/tools ${remote_user}@${slave_node}:${remote_builds_dir}/
+fi
+
+echo "launching remote slave process"
+ssh -l ${remote_user} -i ${keyfile} ${slave_node} ${remote_builds_dir}/tools/start-dynaslave

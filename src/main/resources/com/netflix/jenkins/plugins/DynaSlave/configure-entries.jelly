@@ -1,0 +1,66 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+         xmlns:f="/lib/form">
+    <f:entry title="${%Description}" help="/help/system-config/master-slave/description.html">
+        <f:textbox field="nodeDescription"/>
+    </f:entry>
+
+    <f:entry title="${%# of executors}" field="numExecutors">
+        <f:textbox/>
+    </f:entry>
+
+    <f:entry title="${%Remote FS root}" field="remoteFS">
+        <f:textbox/>
+    </f:entry>
+
+    <f:entry title="${%Labels}" field="labelString">
+        <f:textbox/>
+    </f:entry>
+
+    <f:entry title="${%Idle Termination Period (minutes)}" field="idleTerminationMinutes">
+        <f:textbox/>
+    </f:entry>
+
+    <f:slave-mode name="mode" node="${it}"/>
+    <f:dropdownList name="slave.launcher" title="${%Launch method}"
+                    help="${descriptor.getHelpFile('launcher')}">
+        <j:forEach var="d" items="${h.getComputerLauncherDescriptors()}">
+            <f:dropdownListBlock value="${d.clazz.name}" name="${d.displayName}"
+                                 selected="${it.launcher.descriptor==d}"
+                                 title="${d.displayName}">
+                <j:set var="descriptor" value="${d}"/>
+                <j:set var="instance"
+                       value="${it.launcher.descriptor==d ? it.launcher : null}"/>
+                <f:invisibleEntry>
+                    <input type="hidden" name="stapler-class" value="${d.clazz.name}"/>
+                </f:invisibleEntry>
+                <st:include from="${d}" page="${d.configPage}" optional="true"/>
+            </f:dropdownListBlock>
+        </j:forEach>
+    </f:dropdownList>
+
+    <j:if test="${h.getRetentionStrategyDescriptors().size() gt 1}">
+        <f:dropdownList name="slave.retentionStrategy" title="${%Availability}"
+                        help="/help/system-config/master-slave/availability.html">
+            <j:forEach var="d" items="${h.getRetentionStrategyDescriptors()}">
+                <j:if test="${d != null}">
+                    <f:dropdownListBlock value="${d.clazz.name}" name="${d.displayName}"
+                                         selected="${it.retentionStrategy.descriptor==d}"
+                                         title="${d.displayName}">
+                        <j:set var="descriptor" value="${d}"/>
+                        <j:set var="instance"
+                               value="${it.retentionStrategy.descriptor==d ? it.retentionStrategy : null}"/>
+                        <tr>
+                            <td>
+                                <input type="hidden" name="stapler-class" value="${d.clazz.name}"/>
+                            </td>
+                        </tr>
+                        <st:include from="${d}" page="${d.configPage}" optional="true"/>
+                    </f:dropdownListBlock>
+                </j:if>
+            </j:forEach>
+        </f:dropdownList>
+    </j:if>
+
+    <f:descriptorList title="${%Node Properties}" descriptors="${h.getNodePropertyDescriptors(descriptor.clazz)}"
+                      field="nodeProperties"/>
+</j:jelly>
