@@ -43,7 +43,9 @@ The plugin registers http://jenkins_base_url/plugins/doCreateSlave as an entrypo
 * hostname (the addressable hostname (or ip address) of the node)
 
 An example
+```
     http://jenkinshost/plugin/dynaslave/createSlave?name=foobar&executors=2&remoteFsRoot=/apps/jenkins&description=foobar&labels=foo%20bar%20baz%20quux&hostname=foobarbaz.com
+```
 
 This creates a slave named ds-foobar (ds- is added implicitly and is derived from the global default prefix) with two executors, remoteFsRoot in /apps/jenkins, a simple description "foobar," adds labels (foo, bar, baz, and quux), having hostname foobarbaz.com.  Once polled, Jenkins creates internal structures registering the node and fires the launcher command.
 
