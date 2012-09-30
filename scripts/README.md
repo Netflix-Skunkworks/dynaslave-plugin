@@ -1,0 +1,1 @@
+We've provided some very basic pared down flavors of scripts we use in conjunction with the dynaslave plugin. These are merely examples--users will almost definitely want to tweak or adapt them to their needs, or do something different altogether.
