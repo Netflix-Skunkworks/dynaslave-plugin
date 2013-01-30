@@ -63,7 +63,9 @@ public class DynaSlavePlugin extends Plugin {
         try {
             final Jenkins jenkins = Jenkins.getInstance();
 
-            name = defaultPrefix + "-" + name;
+            if (defaultPrefix != null && !defaultPrefix.isEmpty()) {
+                name = defaultPrefix + "-" + name;
+            }
 
             if (description == null) {
                 description = "";
