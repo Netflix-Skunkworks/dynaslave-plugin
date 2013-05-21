@@ -9,6 +9,8 @@ import hudson.slaves.SlaveComputer;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import static hudson.util.TimeUnit2.MINUTES;
@@ -22,18 +24,18 @@ import static java.util.logging.Level.WARNING;
 public class DynaSlaveRetentionStrategy extends RetentionStrategy<SlaveComputer> {
     private static final Logger LOGGER = Logger.getLogger(DynaSlaveRetentionStrategy.class.getName());
 
-    private int idleMinutes;
-    public boolean disabled = Boolean.getBoolean(DynaSlaveRetentionStrategy.class.getName() + ".disabled");
+    private AtomicInteger idleMinutes;
+    public AtomicBoolean disabled = new AtomicBoolean(Boolean.getBoolean(DynaSlaveRetentionStrategy.class.getName() + ".disabled"));
 
     @DataBoundConstructor
     public DynaSlaveRetentionStrategy(String strIdleMinutes) {
-        this.idleMinutes = Util.tryParseNumber(strIdleMinutes, 30).intValue();
+        this.idleMinutes.set(Util.tryParseNumber(strIdleMinutes, 30).intValue());
     }
 
-    public synchronized long check(final SlaveComputer c) {
-        if (c.isOffline() && !disabled) {
+    public long check(final SlaveComputer c) {
+        if (c.isOffline() && !disabled.get()) {
             final long idleMilliseconds = System.currentTimeMillis() - c.getIdleStartMilliseconds();
-            if (idleMilliseconds > MINUTES.toMillis(idleMinutes)) {
+            if (idleMilliseconds > MINUTES.toMillis(idleMinutes.get())) {
                 LOGGER.info("Disconnecting dynaslave " + c.getName());
                 try {
                     Hudson.getInstance().removeNode(c.getNode());
