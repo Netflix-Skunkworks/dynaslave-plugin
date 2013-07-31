@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class DynaSlavePlugin extends Plugin {
     private static final Logger LOG = Logger.getLogger(DynaSlavePlugin.class.getName());
 
-    private String defaultPrefix = "ds";
+    private String defaultPrefix = "dynaslave";
     private String defaultLabels = "";
     private String defaultRemoteSlaveUser = "jenkins";
     private String defaultBaseLauncherCommand = "/apps/jenkins/tools/start-remote-dynaslave";

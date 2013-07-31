@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * {@link Slave} created by ad-hoc local systems.
+ * {@link Slave}  created by ad-hoc local systems.
  * Initial concept heavily borrowed from the Swarm plugin
  */
 public class DynaSlave extends Slave {
