@@ -24,7 +24,7 @@ import static java.util.logging.Level.WARNING;
 public class DynaSlaveRetentionStrategy extends RetentionStrategy<SlaveComputer> {
     private static final Logger LOGGER = Logger.getLogger(DynaSlaveRetentionStrategy.class.getName());
 
-    private AtomicInteger idleMinutes;
+    private AtomicInteger idleMinutes = new AtomicInteger(30);
     public AtomicBoolean disabled = new AtomicBoolean(Boolean.getBoolean(DynaSlaveRetentionStrategy.class.getName() + ".disabled"));
 
     @DataBoundConstructor
