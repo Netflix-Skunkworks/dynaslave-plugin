@@ -35,7 +35,8 @@ public class DynaSlaveRetentionStrategy extends RetentionStrategy<SlaveComputer>
     public long check(final SlaveComputer c) {
         if (c.isOffline() && !disabled.get()) {
             final long idleMilliseconds = System.currentTimeMillis() - c.getIdleStartMilliseconds();
-            if (idleMilliseconds > MINUTES.toMillis(idleMinutes.get())) {
+            final long defaultIdleMinutes = (this.idleMinutes != null ? this.idleMinutes.get() : 30);
+            if (idleMilliseconds > MINUTES.toMillis(defaultIdleMinutes)) {
                 LOGGER.info("Disconnecting dynaslave " + c.getName());
                 try {
                     Hudson.getInstance().removeNode(c.getNode());
