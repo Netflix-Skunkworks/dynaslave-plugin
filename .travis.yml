@@ -1,0 +1,12 @@
+language: java
+jdk:
+- oraclejdk7
+- openjdk6
+deploy:
+  provider: releases
+  api_key:
+    secure: JgCLzT+ZjMLiVhWDUMfGzw1tflHiWUNUqh3wh9G7EkfVfUWBrFHfDETJF3ici2BVJcDMvtqippLUxi1ExK3oR0Acpo3BVV3xr2ARGjdYtM1c/867k1Ka7iuCSNXoWhCmMj+LqOgx/ReW4XbBpG8ziMAY1mu34EvbNLMNvu/VYEqPuMRAY4jmaeL1rPCxkQIqzo5anCKc4L6CGu4lN1tgAhXIOMQuaUEb/mjN/Ew7uYZ2WJ/S9t2eU8FMfTzBxdP6YTktmu/TCCrV4UWq8bGFCE4WDnhBPrbGLZ8RtY2+RSuUti4BHvLG2e23jCp8mdbdh71aIALD9et6kIoin5KtL07SML0s21M4sVtGAK+QUuJJosM3EK2iHKOAxpS+WT/qu/usl3C2DaBWFFaXOPHG+tNbD0iOIhazReQRc3dP0hcTG4yTEBN999dfxCEkwwgg/1pSmfUxgFbj0s31pAVN63Sj1dGZGtGNaACDv35W/kY73RLxAxecZru7PR20Xq7ZOn/XKlTsXo4vKPxc4KOb6k2r/dZ1hEeX6JdefALOBSyJPc816dG3Y6BlL3RalUfxiIGwO7oeItW3vbV6DvjPPUTSyMdSqx8yfF55zI8gdJZFhdq7iw/sqOqyoExYzufX6Nsf424rtiIju1w7Lz+ts7phq3oXo955RzSkvMKyO5E=
+  file: target/dynaslave.hpi
+  on:
+    repo: ydgholz/dynaslave-plugin
+    tags: true
